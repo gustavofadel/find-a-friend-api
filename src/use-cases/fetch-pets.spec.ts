@@ -2,18 +2,20 @@ import { InMemoryOrganizationsRepository } from '@/repositories/in-memory/in-mem
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
 import { hash } from 'bcryptjs'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { RegisterPetUseCase } from './register-pet'
+import { FetchPetsUseCase } from './fetch-pets'
 
 let organizationsRepository: InMemoryOrganizationsRepository
 let petsRepository: InMemoryPetsRepository
-let sut: RegisterPetUseCase
+let sut: FetchPetsUseCase
 
-describe('Register Pet Use Case', () => {
+describe('Fetch Pets Use Case', () => {
   beforeEach(async () => {
     organizationsRepository = new InMemoryOrganizationsRepository()
     petsRepository = new InMemoryPetsRepository()
-    sut = new RegisterPetUseCase(organizationsRepository, petsRepository)
+    sut = new FetchPetsUseCase(organizationsRepository, petsRepository)
+  })
 
+  it('should be able to fetch pets by city', async () => {
     await organizationsRepository.create({
       id: 'organization-01',
       caretaker_name: 'John Doe',
@@ -25,11 +27,21 @@ describe('Register Pet Use Case', () => {
       phone: '(00) 00000-0000',
       password_hash: await hash('123456', 6),
     })
-  })
 
-  it('should be able to register a pet', async () => {
-    const { pet } = await sut.execute({
-      organizationId: 'organization-01',
+    await organizationsRepository.create({
+      id: 'organization-02',
+      caretaker_name: 'Jane Doe',
+      email: 'janedoe@example.com',
+      zip_code: '00000-000',
+      address: 'Avenida C, 0000, Bairro D, Belém - PA',
+      latitude: -1.400024,
+      longitude: -48.4448369,
+      phone: '(00) 00000-0000',
+      password_hash: await hash('123456', 6),
+    })
+
+    await petsRepository.create({
+      organization_id: 'organization-01',
       name: 'Alfredo',
       about:
         'Eu sou um lindo doguinho de 3 anos, um jovem brincalhão que adora fazer companhia, uma bagunça mas também ama uma soneca.',
@@ -49,6 +61,11 @@ describe('Register Pet Use Case', () => {
       ],
     })
 
-    expect(pet.id).toEqual(expect.any(String))
+    const { pets } = await sut.execute({
+      city: 'Manaus - AM',
+    })
+
+    expect(pets).toHaveLength(1)
+    expect(pets).toEqual([expect.objectContaining({ name: 'Alfredo' })])
   })
 })

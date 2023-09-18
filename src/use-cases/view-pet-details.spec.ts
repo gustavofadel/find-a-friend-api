@@ -19,6 +19,7 @@ describe('View Pet Details Use Case', () => {
       caretaker_name: 'John Doe',
       email: 'johndoe@example.com',
       zip_code: '00000-000',
+      address: 'Avenida A, 0000, Bairro B, Manaus - AM',
       latitude: -3.0747256,
       longitude: -60.0087278,
       phone: '(00) 00000-0000',

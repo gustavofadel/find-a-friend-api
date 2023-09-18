@@ -13,11 +13,12 @@ describe('Register Organization Use Case', () => {
     sut = new RegisterOrganizationUseCase(organizationsRepository)
   })
 
-  it('should be able to register', async () => {
+  it('should be able to register an organization', async () => {
     const { organization } = await sut.execute({
       caretaker_name: 'John Doe',
       email: 'johndoe@example.com',
       zip_code: '00000-000',
+      address: 'Avenida A, 0000, Bairro B, Manaus - AM',
       latitude: -3.0747256,
       longitude: -60.0087278,
       phone: '(00) 00000-0000',
@@ -27,11 +28,12 @@ describe('Register Organization Use Case', () => {
     expect(organization.id).toEqual(expect.any(String))
   })
 
-  it('should hash user password upon registration', async () => {
+  it('should hash the organization password upon registration', async () => {
     const { organization } = await sut.execute({
       caretaker_name: 'John Doe',
       email: 'johndoe@example.com',
       zip_code: '00000-000',
+      address: 'Avenida A, 0000, Bairro B, Manaus - AM',
       latitude: -3.0747256,
       longitude: -60.0087278,
       phone: '(00) 00000-0000',
@@ -46,13 +48,14 @@ describe('Register Organization Use Case', () => {
     expect(isPasswordCorrectlyHashed).toBe(true)
   })
 
-  it('should not be able to register with same email twice', async () => {
+  it('should not be able to register an organization with same email twice', async () => {
     const email = 'johndoe@example.com'
 
     await sut.execute({
       caretaker_name: 'John Doe',
       email,
       zip_code: '00000-000',
+      address: 'Avenida A, 0000, Bairro B, Manaus - AM',
       latitude: -3.0747256,
       longitude: -60.0087278,
       phone: '(00) 00000-0000',
@@ -64,6 +67,7 @@ describe('Register Organization Use Case', () => {
         caretaker_name: 'John Doe',
         email,
         zip_code: '00000-000',
+        address: 'Avenida A, 0000, Bairro B, Manaus - AM',
         latitude: -3.0747256,
         longitude: -60.0087278,
         phone: '(00) 00000-0000',

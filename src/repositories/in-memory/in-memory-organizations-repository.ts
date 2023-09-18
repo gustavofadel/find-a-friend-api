@@ -13,6 +13,7 @@ export class InMemoryOrganizationsRepository
       caretaker_name: data.caretaker_name,
       email: data.email,
       zip_code: data.zip_code,
+      address: data.address,
       latitude: new Prisma.Decimal(data.latitude.toString()),
       longitude: new Prisma.Decimal(data.longitude.toString()),
       phone: data.phone,
@@ -43,5 +44,9 @@ export class InMemoryOrganizationsRepository
     }
 
     return organization
+  }
+
+  async findManyByCity(city: string) {
+    return this.items.filter((item) => item.address.endsWith(city))
   }
 }

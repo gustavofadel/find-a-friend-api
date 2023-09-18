@@ -1,4 +1,4 @@
-import { Pet, Prisma } from '@prisma/client'
+import { Organization, Pet, Prisma } from '@prisma/client'
 import { randomUUID } from 'node:crypto'
 import { PetsRepository } from '../pets-repository'
 
@@ -34,5 +34,15 @@ export class InMemoryPetsRepository implements PetsRepository {
     }
 
     return pet
+  }
+
+  async findManyByOrganizations(organizations: Organization[]) {
+    const organizationsIds = organizations.map(
+      (organization) => organization.id,
+    )
+
+    return this.items.filter((item) =>
+      organizationsIds.includes(item.organization_id),
+    )
   }
 }

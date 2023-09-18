@@ -7,6 +7,7 @@ interface RegisterOrganizationUseCaseRequest {
   caretaker_name: string
   email: string
   zip_code: string
+  address: string
   latitude: number
   longitude: number
   phone: string
@@ -24,6 +25,7 @@ export class RegisterOrganizationUseCase {
     caretaker_name,
     email,
     zip_code,
+    address,
     latitude,
     longitude,
     phone,
@@ -42,6 +44,7 @@ export class RegisterOrganizationUseCase {
       caretaker_name,
       email,
       zip_code,
+      address,
       latitude,
       longitude,
       phone,
