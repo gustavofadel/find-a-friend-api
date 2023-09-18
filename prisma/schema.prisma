@@ -16,7 +16,7 @@ model Pet {
   energy       String
   independence String
   ambient      String
-  pictures     Bytes[]
+  pictures     String[]
   requirements String[]
   created_at   DateTime @default(now())
 
