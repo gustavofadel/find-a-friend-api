@@ -13,9 +13,7 @@ describe('Fetch Pets Use Case', () => {
     organizationsRepository = new InMemoryOrganizationsRepository()
     petsRepository = new InMemoryPetsRepository()
     sut = new FetchPetsUseCase(organizationsRepository, petsRepository)
-  })
 
-  it('should be able to fetch pets by city', async () => {
     await organizationsRepository.create({
       id: 'organization-01',
       caretaker_name: 'John Doe',
@@ -61,8 +59,82 @@ describe('Fetch Pets Use Case', () => {
       ],
     })
 
+    await petsRepository.create({
+      organization_id: 'organization-02',
+      name: 'Max',
+      about:
+        'Max é um cachorro simpático e amigável que adora fazer novos amigos. Ele é um companheiro leal e está sempre pronto para brincar e receber carinho.',
+      age: 'Adulto',
+      size: 'Grande',
+      energy: 'Média',
+      independence: 'Médio (precisa de companhia só de vez em quando)',
+      ambient: 'Ambiente amplo',
+      pictures: [
+        'https://www.petlove.com.br/images/breeds/193103/profile/original/pastor_alemao-p.jpg?1532539270',
+      ],
+      requirements: [
+        'Local grande para o animal para o animal correr e brincar',
+        'Treinamento básico para boas maneiras',
+      ],
+    })
+  })
+
+  it('should be able to fetch pets by city', async () => {
+    const { pets } = await sut.execute({
+      city: 'Belém - PA',
+    })
+
+    expect(pets).toHaveLength(1)
+    expect(pets).toEqual([expect.objectContaining({ name: 'Max' })])
+  })
+
+  it('should be able to filter pets by age', async () => {
     const { pets } = await sut.execute({
       city: 'Manaus - AM',
+      age: 'Filhote',
+    })
+
+    expect(pets).toHaveLength(1)
+    expect(pets).toEqual([expect.objectContaining({ name: 'Alfredo' })])
+  })
+
+  it('should be able to filter pets by size', async () => {
+    const { pets } = await sut.execute({
+      city: 'Manaus - AM',
+      size: 'Pequenino',
+    })
+
+    expect(pets).toHaveLength(1)
+    expect(pets).toEqual([expect.objectContaining({ name: 'Alfredo' })])
+  })
+
+  it('should be able to filter pets by energy', async () => {
+    const { pets } = await sut.execute({
+      city: 'Manaus - AM',
+      energy: 'Muita',
+    })
+
+    expect(pets).toHaveLength(1)
+    expect(pets).toEqual([expect.objectContaining({ name: 'Alfredo' })])
+  })
+
+  it('should be able to filter pets by independence', async () => {
+    const { pets } = await sut.execute({
+      city: 'Manaus - AM',
+      independence: 'Baixo (precisa de companhia sempre)',
+    })
+
+    expect(pets).toHaveLength(1)
+    expect(pets).toEqual([expect.objectContaining({ name: 'Alfredo' })])
+  })
+
+  it('should be able to fetch pets by all filters', async () => {
+    const { pets } = await sut.execute({
+      city: 'Manaus - AM',
+      age: 'Filhote',
+      size: 'Pequenino',
+      energy: 'Muita',
+      independence: 'Baixo (precisa de companhia sempre)',
     })
 
     expect(pets).toHaveLength(1)

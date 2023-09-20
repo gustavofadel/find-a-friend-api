@@ -46,8 +46,8 @@ export class InMemoryPetsRepository implements PetsRepository {
     )
   }
 
-  async findMany(params: FindManyParams) {
-    return this.items.filter((item) => {
+  async filterPets(pets: Pet[], params: FindManyParams) {
+    return pets.filter((item) => {
       let passesFilters = true
 
       if (params.age && params.age !== item.age) {
