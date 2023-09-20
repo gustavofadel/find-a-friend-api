@@ -65,7 +65,7 @@ describe('Nearby Gyms (e2e)', () => {
         city: 'Manaus - AM',
         age: 'Filhote',
         size: 'Pequenino',
-        // energy: 'Muita',
+        energy: 'Muita',
         independence: 'Baixo (precisa de companhia sempre)',
       })
       .send()
