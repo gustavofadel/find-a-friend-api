@@ -5,25 +5,17 @@ import { z } from 'zod'
 export async function fetch(request: FastifyRequest, reply: FastifyReply) {
   const fetchPetsQuerySchema = z.object({
     city: z.string(),
-    age: z.string().nullable(),
-    energy: z.string().nullable(),
-    size: z.string().nullable(),
-    independence: z.string().nullable(),
+    age: z.string().optional(),
+    energy: z.string().optional(),
+    size: z.string().optional(),
+    independence: z.string().optional(),
   })
 
-  const { city, age, energy, size, independence } = fetchPetsQuerySchema.parse(
-    request.query,
-  )
+  const queryParams = fetchPetsQuerySchema.parse(request.query)
 
   const fetchPetsUseCase = makeFetchPetsUseCase()
 
-  const { pets } = await fetchPetsUseCase.execute({
-    city,
-    age,
-    energy,
-    size,
-    independence,
-  })
+  const { pets } = await fetchPetsUseCase.execute(queryParams)
 
   return reply.status(200).send({
     pets,
